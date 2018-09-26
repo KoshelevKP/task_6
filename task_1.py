@@ -1,21 +1,38 @@
 import requests
 from urllib.parse import urlencode
+import constants
 
-APP_ID = 6698149
-OAUTH_URL = 'https://oauth.vk.com/authorize'
-oauth_data = {
-    'client_id': APP_ID,
-    #'redirect_uri': '',
-    'display': 'page',
-    'scope': 'status',
-    'response_type': 'token'
-}
+#Вывод ссылке для получения ключа доступа к странице 
+print('?'.join((constants.OAUTH_URL, urlencode(constants.oauth_data))))
 
-print('?'.join((OAUTH_URL, urlencode(oauth_data))))
-
+#Ключ доступа к странице
 TOKEN = ''
 
-class user:
+
+class User:
+    '''
+    Класс пользователь.
+    Данный класс используетс для хранения данных о пользовтелях сети "В контакте".
+    
+    Данный класс хранит информацию о статусе пользователя, ссылку на страницу в интернете и ключ доступа к странице.
+    
+    Для создания объекта пользователь необходимо указать ключ доступа к странице.
+        user = User(TOKEN)
+        
+    Оператор И возвращает список обших друзей пользователей.
+        common_friends = user_1 & user_2
+        
+    Функция print() выводит ссылку на страницу пользователя.
+    
+    Методы класса пользователь:
+        get_params() - возвращает ключ доступа к странице.
+        get_status() - возвращает стутус пользователя.
+        set_status(text) - устанавливает статус пользователя.
+        get_friend() - возвращает список с id друзей пользоваиеля.
+        get_id() - возвращает id пользователя.
+    
+    '''
+    
     status = None
     id = None
     
@@ -51,6 +68,7 @@ class user:
     def get_id(self):
         params = self.get_params()
         response = requests.get('https://api.vk.com/method/users.get', params)
+        self.id = response.json()['response'][0]['id']
         return response.json()['response'][0]['id']
     
     def __and__(self, other):
@@ -59,7 +77,7 @@ class user:
         common_friends = list()
         for friend in friends_1:
             if friend in friends_2:
-                user_friend = user('')
+                user_friend = User('')
                 user_friend.id = friend
                 common_friends.append(user_friend)
         return common_friends
@@ -70,9 +88,8 @@ class user:
         return 'https://vk.com/id' + str(self.id)
     
     
-
-user_1 = user(TOKEN)
-user_2 = user(TOKEN)
+user_1 = User(TOKEN)
+user_2 = User(TOKEN)
 
 common_friends = user_1 & user_2
 for friend in common_friends:
