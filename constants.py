@@ -6,3 +6,6 @@ oauth_data = {
     'scope': 'status',
     'response_type': 'token'
 }
+
+#Ключ доступа к странице
+TOKEN = ''

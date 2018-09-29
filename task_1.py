@@ -5,9 +5,6 @@ import constants
 #Вывод ссылке для получения ключа доступа к странице 
 print('?'.join((constants.OAUTH_URL, urlencode(constants.oauth_data))))
 
-#Ключ доступа к странице
-TOKEN = ''
-
 
 class User:
     '''
@@ -35,9 +32,10 @@ class User:
     
     status = None
     id = None
+    token = None
     
-    def __init__(self, token):
-        self.token = token
+    def __init__(self, id):
+        self.id = id
         
     def get_params(self):
         return {
@@ -77,8 +75,7 @@ class User:
         common_friends = list()
         for friend in friends_1:
             if friend in friends_2:
-                user_friend = User('')
-                user_friend.id = friend
+                user_friend = User(friend)
                 common_friends.append(user_friend)
         return common_friends
         
@@ -88,8 +85,10 @@ class User:
         return 'https://vk.com/id' + str(self.id)
     
     
-user_1 = User(TOKEN)
-user_2 = User(TOKEN)
+user_1 = User(11327219)
+user_1.token = constants.TOKEN
+user_2 = User(11327219)
+user_2.token = constants.TOKEN
 
 common_friends = user_1 & user_2
 for friend in common_friends:
